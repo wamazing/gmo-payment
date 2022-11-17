@@ -124,7 +124,7 @@ module GMO
       :register_disp_7       => "RegisterDisp7",
       :register_disp_8       => "RegisterDisp8",
       :reserve_no            => "ReserveNo",
-      :ret_url               => "RetURL",
+      :ret_url               => "RetUrl",
       :security_code         => "SecurityCode",
       :seq_mode              => "SeqMode",
       :service_name          => "ServiceName",
@@ -158,7 +158,8 @@ module GMO
       :trade_days            => "TradeDays",
       :trade_reason          => "TradeReason",
       :trade_client_name     => "TradeClientName",
-      :trade_client_mail_address => "TradeClientMailAddress"
+      :trade_client_mail_address => "TradeClientMailAddress",
+      :tds2_challenge_ind_type => "Tds2ChallengeIndType"
     }.freeze
 
     API_ERROR_MESSAGES_EN = {
