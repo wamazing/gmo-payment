@@ -158,7 +158,8 @@ module GMO
       :trade_days            => "TradeDays",
       :trade_reason          => "TradeReason",
       :trade_client_name     => "TradeClientName",
-      :trade_client_mail_address => "TradeClientMailAddress"
+      :trade_client_mail_address => "TradeClientMailAddress",
+      :tds2_challenge_ind_type => "Tds2ChallengeIndType"
     }.freeze
 
     API_ERROR_MESSAGES_EN = {
