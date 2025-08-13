@@ -146,7 +146,7 @@ module GMO
       :tds2_ch_acc_change    => "Tds2ChAccChange",
       :tds2_email            => "Tds2Email",
       :tds2_three_ds_req_auth_method => "Tds2ThreeDSReqAuthMethod",
-      :tds2_payment_acc_ag   => "Tds2PaymentAccAg",
+      :tds2_payment_acc_age   => "Tds2PaymentAccAge",
       :tds2_ship_ind         => "Tds2ShipInd",
       :td_tenant_name        => "TdTenantName",
       :tel_no                => "TelNo",
