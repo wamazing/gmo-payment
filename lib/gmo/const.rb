@@ -99,6 +99,7 @@ module GMO
       :payment_type          => "PaymentType",
       :payment_term_day      => "PaymentTermDay",
       :payment_term_sec      => "PaymentTermSec",
+      :paypal_billing_agreement_id => "PaypalBillingAgreementID",
       :receipts_disp_1       => "ReceiptsDisp1",
       :receipts_disp_2       => "ReceiptsDisp2",
       :receipts_disp_3       => "ReceiptsDisp3",

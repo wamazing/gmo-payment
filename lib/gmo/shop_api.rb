@@ -73,6 +73,16 @@ module GMO
         post_request name, options
       end
 
+      # 【PayPal決済】
+      # 取引登録
+      # これ以降の決済取引で必要となる取引IDと取引パスワードの発行を行い、取引を開始します。
+      def entry_tran_paypal(options = {})
+        name = "EntryTranPaypal.idPass"
+        required = [:order_id, :job_cd, :amount]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
       # 【LINE Pay決済】
       #  20.1.2.1. 取引登録
       #  これ以降の決済取引で必要となる取引IDと取引パスワードの発行を行い、取引を開始します。
@@ -318,6 +328,17 @@ module GMO
       def exec_tran_pay_easy(options = {})
         name = "ExecTranPayEasy.idPass"
         required = [:access_id, :access_pass, :order_id, :customer_name, :customer_kana, :tel_no, :receipts_disp_11, :receipts_disp_12, :receipts_disp_13]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # 【PayPal決済】
+      # 決済実行
+      # PayPalと通信を行い決済要求結果を返します。
+      def exec_tran_paypal(options = {})
+        name = "ExecTranPaypal.idPass"
+        # PayPal 決済実行APIの全パターンで共通の必須パラメータのみチェック
+        required = [:access_id, :access_pass, :order_id]
         assert_required_options(required, options)
         post_request name, options
       end
@@ -597,6 +618,16 @@ module GMO
       def cvs_cancel(options = {})
         name = "CvsCancel.idPass"
         required = [:access_id, :access_pass, :order_id]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # 【PayPal決済】
+      # キャンセル
+      # PayPalと通信を行い、取引のキャンセル処理を行います。
+      def cancel_tran_paypal(options = {})
+        name = "CancelTranPaypal.idPass"
+        required = [:access_id, :access_pass, :order_id, :amount]
         assert_required_options(required, options)
         post_request name, options
       end
