@@ -632,6 +632,26 @@ module GMO
         post_request name, options
       end
 
+      # 【PayPal決済】
+      # 仮売上取消
+      # PayPalと通信を行い、仮売上の取消処理を行います。
+      def cancel_auth_paypal(options = {})
+        name = "CancelAuthPaypal.idPass"
+        required = [:access_id, :access_pass, :order_id]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # 【PayPal決済】
+      # 実売上
+      # PayPalと通信を行い取引の実売上処理を行います。※実売上を行うときは金額を変更することが可能です。変更後の合計金額は、変更前の合計金額より少なくしてください。
+      def paypal_sales(options = {})
+        name = "PaypalSales.idPass"
+        required = [:access_id, :access_pass, :order_id, :amount]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
       ## 2.16.2.1.取引状態参照
       # 指定したオーダーID の取引情報を取得します。
       def search_trade(options = {})
