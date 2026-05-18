@@ -20,7 +20,7 @@ module GMO
       order_id:    '3'
     }
 
-    INPUT_PARAMS = {
+    BASE_INPUT_PARAMS = {
       :access_id             => "AccessID",
       :access_pass           => "AccessPass",
       :account_name          => "Account_Name",
@@ -33,11 +33,17 @@ module GMO
       :address_4             => "Address4",
       :address_5             => "Address5",
       :address_6             => "Address6",
+      :auth_code             => "Auth_Code",
+      :auth_code_2           => "Auth_Code2",
+      :auth_code_3           => "Auth_Code3",
       :amount                => "Amount",
+      :app_mode              => "AppMode",
       :bank_code             => "Bank_Code",
       :bank_id               => "Bank_ID",
       :branch_code           => "Branch_Code",
       :branch_code_jp        => "Branch_Code_Jpbank",
+      :call_back_url         => "Call_Back_Url",
+      :callback_type         => "CallbackType",
       :cancel_amount         => "CancelAmount",
       :cancel_tax            => "CancelTax",
       :card_name             => "CardName",
@@ -52,6 +58,7 @@ module GMO
       :client_field_2        => "ClientField2",
       :client_field_3        => "ClientField3",
       :client_field_flg      => "ClientFieldFlag",
+      :client_name           => "Client_Name",
       :commodity             => "Commodity",
       :confirm_base_date     => "ConfirmBaseDate",
       :continuance_month     => "ContinuanceMonth",
@@ -87,6 +94,10 @@ module GMO
       :locale                => "Locale",
       :md                    => "MD",
       :mail_address          => "MailAddress",
+      :mail_template_free_1  => "Mail_Template_Free1",
+      :mail_template_free_2  => "Mail_Template_Free2",
+      :mail_template_free_3  => "Mail_Template_Free3",
+      :mail_template_number  => "Mail_Template_Number",
       :member_id             => "MemberID",
       :member_name           => "MemberName",
       :member_no             => "MemberNo",
@@ -123,12 +134,18 @@ module GMO
       :register_disp_6       => "RegisterDisp6",
       :register_disp_7       => "RegisterDisp7",
       :register_disp_8       => "RegisterDisp8",
+      :remit_method_amazongift => "Remit_Method_Amazongift",
+      :remit_method_aupay => "Remit_Method_Aupay",
+      :remit_method_bank     => "Remit_Method_Bank",
+      :remit_method_sevenatm => "Remit_Method_Sevenatm",
       :reserve_no            => "ReserveNo",
       :ret_url               => "RetUrl",
       :security_code         => "SecurityCode",
+      :select_key            => "Select_Key",
       :seq_mode              => "SeqMode",
       :service_name          => "ServiceName",
       :service_tel           => "ServiceTel",
+      :sevenatm_payment_term_day => "Sevenatm_Payment_Term_Day",
       :shop_id               => "ShopID",
       :shop_mail_address     => "ShopMailAddress",
       :shop_pass             => "ShopPass",
@@ -149,6 +166,49 @@ module GMO
       :tds2_payment_acc_age   => "Tds2PaymentAccAge",
       :tds2_ship_ind         => "Tds2ShipInd",
       :td_tenant_name        => "TdTenantName",
+      :tds2_ch_acc_pw_change => "Tds2ChAccPwChange",
+      :tds2_nb_purchase_account => "Tds2NbPurchaseAccount",
+      :tds2_param            => "Tds2Param",
+      :tds2_payment_acc_age  => "Tds2PaymentAccAge",
+      :tds2_provision_attempts_day => "Tds2ProvisionAttemptsDay",
+      :tds2_ship_address_usage => "Tds2ShipAddressUsage",
+      :tds2_ship_name_ind    => "Tds2ShipNameInd",
+      :tds2_suspicious_acc_activity => "Tds2SuspiciousAccActivity",
+      :tds2_txn_activity_day => "Tds2TxnActivityDay",
+      :tds2_txn_activity_year => "Tds2TxnActivityYear",
+      :tds2_3ds_req_auth_data => "Tds2ThreeDSReqAuthData",
+      :tds2_3ds_req_auth_method => "Tds2ThreeDSReqAuthMethod",
+      :tds2_3ds_req_auth_timestamp => "Tds2ThreeDSReqAuthTimestamp",
+      :tds2_addr_match       => "Tds2AddrMatch",
+      :tds2_bill_addr_city   => "Tds2BillAddrCity",
+      :tds2_bill_addr_country => "Tds2BillAddrCountry",
+      :tds2_bill_addr_line1  => "Tds2BillAddrLine1",
+      :tds2_bill_addr_line2  => "Tds2BillAddrLine2",
+      :tds2_bill_addr_line3  => "Tds2BillAddrLine3",
+      :tds2_bill_addr_post_code => "Tds2BillAddrPostCode",
+      :tds2_bill_addr_state  => "Tds2BillAddrState",
+      :tds2_email            => "Tds2Email",
+      :tds2_home_phone_cc    => "Tds2HomePhoneCC",
+      :tds2_home_phone_subscriber => "Tds2HomePhoneSubscriber",
+      :tds2_mobile_phone_cc  => "Tds2MobilePhoneCC",
+      :tds2_mobile_phone_subscriber => "Tds2MobilePhoneSubscriber",
+      :tds2_work_phone_cc    => "Tds2WorkPhoneCC",
+      :tds2_work_phone_subscriber => "Tds2WorkPhoneSubscriber",
+      :tds2_ship_addr_city   => "Tds2ShipAddrCity",
+      :tds2_ship_addr_country => "Tds2ShipAddrCountry",
+      :tds2_ship_addr_line1  => "Tds2ShipAddrLine1",
+      :tds2_ship_addr_line2  => "Tds2ShipAddrLine2",
+      :tds2_ship_addr_line3  => "Tds2ShipAddrLine3",
+      :tds2_ship_addr_post_code => "Tds2ShipAddrPostCode",
+      :tds2_ship_addr_state  => "Tds2ShipAddrState",
+      :tds2_delivery_email_address => "Tds2DeliveryEmailAddress",
+      :tds2_delivery_time_frame => "Tds2DeliveryTimeframe",
+      :tds2_gift_card_amount => "Tds2GiftCardAmount",
+      :tds2_gift_card_count  => "Tds2GiftCardCount",
+      :tds2_gift_card_curr   => "Tds2GiftCardCurr",
+      :tds2_pre_order_date   => "Tds2PreOrderDate",
+      :tds2_pre_order_purchase_ind => "Tds2PreOrderPurchaseInd",
+      :tds2_reorder_items_ind => "Tds2ReorderItemsInd",
       :tel_no                => "TelNo",
       :token                 => "Token",
       :token_seq             => "TokenSeq",
@@ -169,6 +229,21 @@ module GMO
       :tds2_challenge_ind_type => "Tds2ChallengeIndType",
       :tds2_type => "Tds2Type"
     }.freeze
+
+    # NOTE: 決済方法によってはcaseに揺らぎがあるのでここで上書きする
+    PAYMENT_SPECIFIC_PARAMS = {
+      "ExecTran.idPass" => {
+        ret_url: "RetUrl" # NOTE: 3Dセキュア認証後にお戻しする加盟店様側のURLになります。
+      },
+    }.freeze
+
+    def self.input_params(api_method_name)
+      if PAYMENT_SPECIFIC_PARAMS.key?(api_method_name)
+        BASE_INPUT_PARAMS.dup.merge!(PAYMENT_SPECIFIC_PARAMS[api_method_name])
+      else
+        BASE_INPUT_PARAMS
+      end
+    end
 
     API_ERROR_MESSAGES_EN = {
       '000' => 'Token acquisition completed normally',

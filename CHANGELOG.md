@@ -1,4 +1,26 @@
 # CHANGELOG
+## 0.5.9
+- net-http 0.7.0+でcontent typeを明示的に設定する必要がある問題を修正 [#79](https://github.com/t-k/gmo-payment-ruby/pull/79) (Thanks [@johnnyshields](https://github.com/johnnyshields))
+
+## 0.5.8
+- クレジットカード決済の3Dセキュア2.0に対応 [#76](https://github.com/t-k/gmo-payment-ruby/pull/76)
+  - 3DS2.0認証実行 (`tds2_auth`)
+  - 3DS2.0認証結果取得 (`tds2_result`)
+  - 認証後決済実行 (`secure_tran_2`)
+- Ruby 3.4のサポートを追加 [#74](https://github.com/t-k/gmo-payment-ruby/pull/74) (Thanks [@y-yagi](https://github.com/y-yagi))
+- `ostruct`を明示的な依存関係として追加 [#74](https://github.com/t-k/gmo-payment-ruby/pull/74) (Thanks [@y-yagi](https://github.com/y-yagi))
+
+## 0.5.7
+- Added `nkf` as a dependency. This fixes the warning that appears with Ruby 3.3.0 and later versions. [#67](https://github.com/t-k/gmo-payment-ruby/pull/69)
+
+## 0.5.6
+- Support PayPal決済 [#63](https://github.com/t-k/gmo-payment-ruby/pull/63)
+- Support 銀行振込（バーチャル口座 あおぞら）[#64](https://github.com/t-k/gmo-payment-ruby/pull/64)
+- Update 送金サービス リンクタイプURL取得 [#65](https://github.com/t-k/gmo-payment-ruby/pull/65)
+- Update 送金サービス メール送金指示 [#66](https://github.com/t-k/gmo-payment-ruby/pull/66)
+
+## 0.5.5
+- Enhanced encoding handling to prevent misjudgments during UTF-8 conversion [#57](https://github.com/t-k/gmo-payment-ruby/pull/57) (Thanks [@y-yagi](https://github.com/y-yagi))
 
 ## 0.5.4
 * Support 銀行振込(バーチャル口座)決済, モバイルSuica, 楽天Edy決済 [#53](https://github.com/t-k/gmo-payment-ruby/pull/53) (Thanks [@valda](https://github.com/valda))
