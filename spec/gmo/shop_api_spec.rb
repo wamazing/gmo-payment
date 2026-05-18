@@ -98,6 +98,44 @@ describe "GMO::Payment::ShopAPI" do
     end
   end
 
+  describe "#entry_tran_paypal" do
+    it "gets data about a transaction", :vcr do
+      order_id = @order_id
+      result = @service.entry_tran_paypal({
+        :order_id => order_id,
+        :job_cd => 'CAPTURE',
+        :amount => 100
+      })
+      result["AccessID"].nil?.should_not be_truthy
+      result["AccessPass"].nil?.should_not be_truthy
+    end
+
+    it "got error if missing options", :vcr do
+      lambda {
+        result = @service.entry_tran_paypal()
+      }.should raise_error("Required order_id, job_cd, amount were not provided.")
+    end
+  end
+
+  describe "#entry_tran_ganb" do
+    it "gets data about a transaction", :vcr do
+      order_id = @order_id
+      result = @service.entry_tran_ganb({
+        :order_id => order_id,
+        :amount => 100
+      })
+      result["AccessID"].nil?.should_not be_truthy
+      result["AccessPass"].nil?.should_not be_truthy
+    end
+
+    it "got error if missing options", :vcr do
+      lambda {
+        result = @service.entry_tran_ganb()
+      }.should raise_error("Required order_id, amount were not provided.")
+    end
+  end
+
+
   describe "#entry_tran_linepay" do
     it "gets data about a transaction", :vcr do
       order_id = @order_id
@@ -290,6 +328,28 @@ describe "GMO::Payment::ShopAPI" do
       }.should_not raise_error("Required card_no, expire were not provided.")
     end
 
+    it "converts ret_url to RetUrl for ExecTran.idPass" do
+      # Test that ret_url is converted to RetUrl by associate_options_to_gmo_params
+      actual_params = nil
+      allow(@service).to receive(:api_call) do |name, args, method, options|
+        actual_params = args
+        {}
+      end
+
+      @service.exec_tran({
+        :order_id      => "test_order",
+        :access_id     => "test_access",
+        :access_pass   => "test_pass",
+        :method        => 1,
+        :pay_times     => 1,
+        :card_no       => "4111111111111111",
+        :expire        => "1405",
+        :ret_url       => "https://example.com/3d-secure-callback"
+      })
+
+      expect(actual_params).to include("RetUrl" => "https://example.com/3d-secure-callback")
+    end
+
     context "parameter contains Japanese characters" do
       before { require "kconv" unless defined?(Kconv) }
 
@@ -426,6 +486,72 @@ describe "GMO::Payment::ShopAPI" do
       lambda {
         result = @service.exec_tran_pay_easy()
       }.should raise_error("Required access_id, access_pass, order_id, customer_name, customer_kana, tel_no, receipts_disp_11, receipts_disp_12, receipts_disp_13 were not provided.")
+    end
+  end
+
+  describe "#exec_tran_paypal" do
+    it "gets data about a transaction", :vcr do
+      order_id = generate_id
+      result = @service.entry_tran_paypal({
+        :order_id => order_id,
+        :job_cd => 'CAPTURE',
+        :amount => 100
+      })
+      access_id = result["AccessID"]
+      access_pass = result["AccessPass"]
+      result = @service.exec_tran_paypal({
+        :order_id      => order_id,
+        :access_id     => access_id,
+        :access_pass   => access_pass,
+        :redirect_url  => 'https://example.com/path/to/redirect',
+        :item_name     => '購入する商品名'
+      })
+      result["OrderID"].nil?.should_not be_truthy
+    end
+
+    it "got error if missing options", :vcr do
+      lambda {
+        result = @service.exec_tran_paypal()
+      }.should raise_error("Required access_id, access_pass, order_id, item_name, redirect_url were not provided.")
+    end
+  end
+
+  describe "#exec_tran_ganb" do
+    it "gets data about a transaction", :vcr do
+      order_id = generate_id
+      result = @service.entry_tran_ganb({
+        :order_id => order_id,
+        :amount => 100
+      })
+      access_id = result["AccessID"]
+      access_pass = result["AccessPass"]
+      result = @service.exec_tran_ganb({
+        :order_id      => order_id,
+        :access_id     => access_id,
+        :access_pass   => access_pass,
+        :client_field_1 => '加盟店自由項目1です。',
+        :client_field_2 => '加盟店自由項目2です。',
+        :client_field_3 => '加盟店自由項目3です。',
+        :account_holder_optional_name => 'コウザタロウ',
+        :trade_days        => '3',
+        :trade_reason => '取引事由です。',
+        :trade_client_name => '依頼花子',
+        :trade_client_mailaddress => 'irai@example.com'
+      })
+      result["BankCode"].nil?.should_not be_truthy
+      result["BankName"].nil?.should_not be_truthy
+      result["BranchCode"].nil?.should_not be_truthy
+      result["BranchName"].nil?.should_not be_truthy
+      result["AccountType"].nil?.should_not be_truthy
+      result["AccountNumber"].nil?.should_not be_truthy
+      result["AccountHolderName"].nil?.should_not be_truthy
+      result["AvailableDate"].nil?.should_not be_truthy
+    end
+
+    it "got error if missing options", :vcr do
+      lambda {
+        result = @service.exec_tran_ganb()
+      }.should raise_error("Required access_id, access_pass, order_id were not provided.")
     end
   end
 
@@ -653,7 +779,7 @@ describe "GMO::Payment::ShopAPI" do
       result["Approve"].nil?.should_not be true
       result["TranID"].nil?.should_not be true
       result["TranDate"].nil?.should_not be true
-      (result["ClientField1"] == client_field_1).should be true
+      result["ClientField1"].should eq client_field_1
       result["ClientField2"].nil?.should_not be true
       result["ClientField3"].nil?.should_not be true
     end
@@ -669,7 +795,6 @@ describe "GMO::Payment::ShopAPI" do
 
       it "should correctly handle Japanese", :vcr do
         order_id = generate_id
-        client_field_1 = "〜−¢£¬−‖①ほげほげhogehoge"
         result = @service.entry_tran_brandtoken({
           :order_id => order_id,
           :job_cd => "AUTH",
@@ -683,7 +808,7 @@ describe "GMO::Payment::ShopAPI" do
           :access_pass => access_pass,
           :token_type  => :apple_pay,
           :token       => 'base64encodedtoken',
-          :client_field_1 => client_field_1
+          :client_field_1 => 'ｶｿｳｼﾃﾝ'
         })
         result["Status"].nil?.should_not be true
         result["OrderID"].nil?.should_not be true
@@ -691,8 +816,8 @@ describe "GMO::Payment::ShopAPI" do
         result["Approve"].nil?.should_not be true
         result["TranID"].nil?.should_not be true
         result["TranDate"].nil?.should_not be true
-        (result["ClientField1"] == client_field_1).should be true
-        (result["ClientField1"].encoding.to_s == "UTF-8").should be true
+        result["ClientField1"].should eq "カソウシテン"
+        result["ClientField1"].encoding.name.should eq "UTF-8"
         result["ClientField2"].nil?.should_not be true
         result["ClientField3"].nil?.should_not be true
       end
@@ -1067,4 +1192,94 @@ describe "GMO::Payment::ShopAPI" do
     end
   end
 
+  describe "#exec_tran with 3DS2.0" do
+    it "returns 3DS2.0 challenge flow response", :vcr do
+      result = @service.exec_tran({
+        :access_id => "test_access_7ed782e0e10604b31258e0d69ee3e887",
+        :access_pass => "test_pass_7be5e8786e2e959d7b48ad708634dc7e",
+        :order_id => "TEST_3DS_20250724231518",
+        :method => 1,
+        :pay_times => "",
+        :card_no => "4111111111111111",
+        :expire => "2512",
+        :member_id => "TEST_MEMBER_5df458bc",
+        :card_seq => 0,
+        :tds_type => 2,
+        :tds2_type => 2,
+        :call_back_url => "https://example.com/callback",
+        :tds2_ret_url => "https://example.com/3ds/return"
+      })
+
+      result["OrderID"].should == "<ORDER_ID>"
+      result["Forward"].should == "<FORWARD>"
+      result["Method"].should == "1"
+      result["TranID"].should == "<TRAN_ID>"
+      result["TranDate"].should == "<TRAN_DATE>"
+      result["Tds2TransResult"].should == "C"
+      result["Tds2TransResultReason"].should == "01"
+      result["Tds2ChallengeUrl"].should include("/payment/Tds2Challenge")
+      result["Tds2TransID"].should == "<TDS2_TRANS_ID>"
+    end
+  end
+
+  describe "#tds2_auth" do
+    it "executes 3DS2.0 authentication", :vcr do
+      result = @service.tds2_auth({
+        :access_id => "test_access_7ed782e0e10604b31258e0d69ee3e887",
+        :access_pass => "test_pass_7be5e8786e2e959d7b48ad708634dc7e",
+        :tds2_param => "dummy_tds2_param"
+      })
+
+      result["OrderID"].should == "<ORDER_ID>"
+      result["Forward"].should == "<FORWARD>"
+      result["Method"].should == "1"
+      result["PayTimes"].should == ""
+      result["Approve"].should == ""
+      result["TranID"].should == "<TRAN_ID>"
+      result["TranDate"].should == "<TRAN_DATE>"
+      result["CheckString"].should == "<CHECK_STRING>"
+      result["Tds2TransResult"].should == "Y"  # Authentication successful
+      result["Tds2TransResultReason"].should == ""
+      result["Tds2ChallengeUrl"].should_not be_nil
+      result["Tds2ChallengeUrl"].should include("/payment/Tds2Challenge")
+    end
+  end
+
+  describe "#tds2_result" do
+    it "gets 3DS2.0 authentication result", :vcr do
+      result = @service.tds2_result({
+        :access_id => "test_access_7ed782e0e10604b31258e0d69ee3e887",
+        :access_pass => "test_pass_7be5e8786e2e959d7b48ad708634dc7e"
+      })
+
+      result["OrderID"].should == "<ORDER_ID>"
+      result["Forward"].should == "<FORWARD>"
+      result["Method"].should == "1"
+      result["PayTimes"].should == ""
+      result["Approve"].should == ""
+      result["TranID"].should == "<TRAN_ID>"
+      result["TranDate"].should == "<TRAN_DATE>"
+      result["CheckString"].should == "<CHECK_STRING>"
+      result["Tds2TransResult"].should == "Y"  # Authentication successful
+      result["Tds2TransResultReason"].should == ""
+    end
+  end
+
+  describe "#secure_tran_2" do
+    it "completes payment after 3DS2.0 challenge verification", :vcr do
+      result = @service.secure_tran_2({
+        :access_id => "test_access_7ed782e0e10604b31258e0d69ee3e887",
+        :access_pass => "test_pass_7be5e8786e2e959d7b48ad708634dc7e"
+      })
+
+      result["OrderID"].should == "<ORDER_ID>"
+      result["Forward"].should == "<FORWARD>"
+      result["Method"].should == "1"
+      result["PayTimes"].should == ""
+      result["Approve"].should == "<APPROVE>"
+      result["TranID"].should == "<TRAN_ID>"
+      result["TranDate"].should == "<TRAN_DATE>"
+      result["CheckString"].should == "<CHECK_STRING>"
+    end
+  end
 end
